@@ -1,9 +1,8 @@
 <script lang="ts">
 	import { deepCopy } from '$lib/tools';
 	import { onMount } from 'svelte';
-	//import { model } from './store';
 
-	let template = {
+	let template:any = {
 		populationSize: {
 			label: 'Population size',
 			value: 1000000
@@ -86,9 +85,9 @@
 		}
 	};
 
-	let model: [] = [];
+	let model: any = [];
 
-	function updateModel(model) {
+	function updateModel(model:any) {
 		rules.forEach((rule) => {
 			rule.rule();
 		});
@@ -102,7 +101,7 @@
 		{
 			description: 'Population growth',
 			rule: function () {
-				model.forEach((year, index) => {
+				model.forEach((year:any, index:number) => {
 					if (index !== 0) {
 						year.populationSize.value = Number(model[index - 1].populationSize.value) + 500000;
 						year.populationSize.readOnly = true;
@@ -115,7 +114,7 @@
 		{
 			description: 'Active population',
 			rule: function () {
-				model.forEach((year) => {
+				model.forEach((year:any) => {
 					year.activePopulation.value = Math.round(year.populationSize.value * 0.66);
 					year.activePopulation.readOnly = true;
 				});
@@ -124,7 +123,7 @@
 		{
 			description: 'Warning Max tax before Revolution ',
 			rule: function () {
-				model.forEach((year) => {
+				model.forEach((year:any) => {
 					year.incomeTaxPercent.value > 0.2
 						? (year.incomeTaxPercent.warning = 'Tax to high: might cause Revolution.')
 						: (year.incomeTaxPercent.warning = '');
@@ -134,7 +133,7 @@
 		{
 			description: 'VAT from Industry',
 			rule: function () {
-				model.forEach((year) => {
+				model.forEach((year:any) => {
 					year.industryVAT.value = Math.round(
 						(year.activePopulation.value * year.industryVATpercent.value * 2e7) / 1e6
 					);
@@ -145,7 +144,7 @@
 		{
 			description: 'VAT from agriculture',
 			rule: function () {
-				model.forEach((year) => {
+				model.forEach((year:any) => {
 					year.agricultureVAT.value = Math.round(
 						(year.activePopulation.value * year.agricultureVATpercent.value * 1e7) / 1e6
 					);
@@ -156,7 +155,7 @@
 		{
 			description: 'VAT from trade',
 			rule: function () {
-				model.forEach((year) => {
+				model.forEach((year:any) => {
 					year.tradeVAT.value = Math.round(
 						(year.activePopulation.value * year.tradeVATpercent.value * 3e7) / 1e6
 					);
@@ -167,7 +166,7 @@
 		{
 			description: 'Total income aka EGSD, utput in [kDIP]',
 			rule: function () {
-				model.forEach((year) => {
+				model.forEach((year:any) => {
 					let incomeTaxMDIP =
 						(year.activePopulation.value *
 							year.averageIncomePerPerson.value *
@@ -188,7 +187,7 @@
 		{
 			description: 'Budget balance in [M DIP]',
 			rule: function () {
-				model.forEach((year) => {
+				model.forEach((year:any) => {
 					let expensesMDIP =
 						(Number(year.budgetArmy.value) +
 							Number(year.budgetPolice.value) +
@@ -243,9 +242,8 @@
 				<div>
 					{#each Object.keys(year) as field, indexField}
 						<div class="flex h-12 items-center">
-							<!-- class:pointer-events-none={year[field].readOnly} -->
 							{#if year[field].readOnly}
-								<span type="text" class="w-36 p-2 text-right">{year[field].value}</span>
+								<span class="w-36 p-2 text-right">{year[field].value}</span>
 							{:else}
 								<input
 									type="text"
