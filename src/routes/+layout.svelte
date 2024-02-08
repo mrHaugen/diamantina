@@ -38,7 +38,7 @@
 									<li>
 										<!-- Current: "bg-gray-800 text-white", Default: "text-gray-400 hover:text-white hover:bg-gray-800" -->
 										<a
-											href="#"
+											href="./government/budgeting"
 											class="group flex gap-x-3 rounded-md bg-gray-800 p-2 text-sm font-semibold leading-6 text-white"
 										>
 											<svg
@@ -61,7 +61,7 @@
 
 									<li>
 										<a
-											href="#"
+											href="/projects"
 											class="group flex gap-x-3 rounded-md p-2 text-sm font-semibold leading-6 text-gray-400 hover:bg-gray-800 hover:text-white"
 										>
 											<svg
@@ -83,7 +83,7 @@
 									</li>
 									<li>
 										<a
-											href="#"
+											href="/meetings"
 											class="group flex gap-x-3 rounded-md p-2 text-sm font-semibold leading-6 text-gray-400 hover:bg-gray-800 hover:text-white"
 										>
 											<svg
@@ -100,12 +100,12 @@
 													d="M6.75 3v2.25M17.25 3v2.25M3 18.75V7.5a2.25 2.25 0 012.25-2.25h13.5A2.25 2.25 0 0121 7.5v11.25m-18 0A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75m-18 0v-7.5A2.25 2.25 0 015.25 9h13.5A2.25 2.25 0 0121 11.25v7.5"
 												/>
 											</svg>
-											Calendar
+											Meetings
 										</a>
 									</li>
 									<li>
 										<a
-											href="#"
+											href="/documents"
 											class="group flex gap-x-3 rounded-md p-2 text-sm font-semibold leading-6 text-gray-400 hover:bg-gray-800 hover:text-white"
 										>
 											<svg
@@ -127,7 +127,7 @@
 									</li>
 									<li>
 										<a
-											href="#"
+											href="/reports"
 											class="group flex gap-x-3 rounded-md p-2 text-sm font-semibold leading-6 text-gray-400 hover:bg-gray-800 hover:text-white"
 										>
 											<svg
@@ -157,7 +157,7 @@
 
 							<li class="mt-auto">
 								<a
-									href="#"
+									href="/settings"
 									class="group -mx-2 flex gap-x-3 rounded-md p-2 text-sm font-semibold leading-6 text-gray-400 hover:bg-gray-800 hover:text-white"
 								>
 									<svg
@@ -203,7 +203,7 @@
 							<li>
 								<!-- Current: "bg-gray-800 text-white", Default: "text-gray-400 hover:text-white hover:bg-gray-800" -->
 								<a
-									href="#"
+									href="/budgeting"
 									class="group flex gap-x-3 rounded-md bg-gray-800 p-2 text-sm font-semibold leading-6 text-white"
 								>
 									<svg
@@ -226,7 +226,7 @@
 
 							<li>
 								<a
-									href="#"
+									href="/projects"
 									class="group flex gap-x-3 rounded-md p-2 text-sm font-semibold leading-6 text-gray-400 hover:bg-gray-800 hover:text-white"
 								>
 									<svg
@@ -248,7 +248,7 @@
 							</li>
 							<li>
 								<a
-									href="#"
+									href="/meetings"
 									class="group flex gap-x-3 rounded-md p-2 text-sm font-semibold leading-6 text-gray-400 hover:bg-gray-800 hover:text-white"
 								>
 									<svg
@@ -265,12 +265,12 @@
 											d="M6.75 3v2.25M17.25 3v2.25M3 18.75V7.5a2.25 2.25 0 012.25-2.25h13.5A2.25 2.25 0 0121 7.5v11.25m-18 0A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75m-18 0v-7.5A2.25 2.25 0 015.25 9h13.5A2.25 2.25 0 0121 11.25v7.5"
 										/>
 									</svg>
-									Calendar
+									Meetings
 								</a>
 							</li>
 							<li>
 								<a
-									href="#"
+									href="/documents"
 									class="group flex gap-x-3 rounded-md p-2 text-sm font-semibold leading-6 text-gray-400 hover:bg-gray-800 hover:text-white"
 								>
 									<svg
@@ -292,7 +292,7 @@
 							</li>
 							<li>
 								<a
-									href="#"
+									href="/reports"
 									class="group flex gap-x-3 rounded-md p-2 text-sm font-semibold leading-6 text-gray-400 hover:bg-gray-800 hover:text-white"
 								>
 									<svg
@@ -322,7 +322,7 @@
 
 					<li class="mt-auto">
 						<a
-							href="#"
+							href="/settings"
 							class="group -mx-2 flex gap-x-3 rounded-md p-2 text-sm font-semibold leading-6 text-gray-400 hover:bg-gray-800 hover:text-white"
 						>
 							<svg
