@@ -1,127 +1,266 @@
 <script lang="ts">
-	let calculationTemplate = [
-		{
-			id: 'populationSize',
-			name: 'Population size',
-			type: 'input',
+	import { deepCopy } from '$lib/tools';
+	import { onMount } from 'svelte';
+	//import { model } from './store';
+
+	let template = {
+		populationSize: {
+			label: 'Population size',
+			value: 1000000
+		},
+		activePopulation: {
+			label: 'Active population',
 			value: null
 		},
-		{
-			id: 'populationSizeCalculated',
-			name: 'yet another function',
-			type: 'calculation',
-			param1: 2,
-			value: function () {
-				return this.param1 * 1000;
-			}
+		averageIncomePerPerson: {
+			label: 'Average income per person [DIP]',
+			value: 3000000
 		},
-		{
-			id: 'averageIncome',
-			name: 'Average income',
-			type: 'input',
-			value: null
+		propertyTax: {
+			label: 'Property tax [DIP]',
+			value: 2000
+		},
+		incomeTaxPercent: {
+			label: 'Income tax [%]',
+			value: 0.2
+		},
+		industryVATpercent: {
+			label: 'Industry VAT [%]',
+			value: 0.17
+		},
+		agricultureVATpercent: {
+			label: 'Agriculture VAT [%]',
+			value: 0.12
+		},
+		tradeVATpercent: {
+			label: 'Trade VAT [%]',
+			value: 0.15
+		},
+		industryVAT: {
+			label: 'Industry VAT [M DIP]',
+			value: 0
+		},
+		agricultureVAT: {
+			label: 'Agriculture VAT [M DIP]',
+			value: 0
+		},
+		tradeVAT: {
+			label: 'Trade VAT [M DIP]',
+			value: 0
+		},
+		totalIncome: {
+			label: 'EGSD [M DIP]',
+			value: 0
+		},
+		budgetArmy: {
+			label: 'Army budget [DIP]',
+			value: 990000000000
+		},
+		budgetPolice: {
+			label: 'Police budget [DIP]',
+			value: 990000000000
+		},
+		budgetHealthCare: {
+			label: 'Health Care budget [DIP]',
+			value: 1500000
+		},
+		budgetEducation: {
+			label: 'Education budget [DIP]',
+			value: 5000000
+		},
+		budgetJustice: {
+			label: 'Justice budget [DIP]',
+			value: 990000000000
+		},
+		budgetPensions: {
+			label: 'Pension budget [DIP]',
+			value: 13300000
+		},
+		budgetInvestments: {
+			label: 'Investment budget [DIP]',
+			value: 2600000000
+		},
+		budgetBalance: {
+			label: 'Blance [M DIP]',
+			value: 0
 		}
-	];
+	};
 
-	//	let JSONcalculationTemplate = '[{"id": "populationSize","name": "Population size","type": "input","value": null},{"id": "averageIncome","name":"Average income","type": "input","value": null}]'
-	//	let calculationTemplate = JSON.parse(JSONcalculationTemplate);
+	let model: [] = [];
 
-	let calculations = [
-		[
-			{
-				id: 'populationSize',
-				name: 'Population size',
-				type: 'input',
-				value: '2'
-			},
-			{
-				id: 'averageIncome',
-				name: 'Average income',
-				type: 'input',
-				value: '4'
-			},
-			{
-				id: 'populationSizeCalculated',
-				name: 'Populations size calculated',
-				type: 'calculation',
-				param: 2,
-				value: function () {
-					return this.param * 9;
-				}
+	function updateModel(model) {
+		rules.forEach((rule) => {
+			rule.rule();
+		});
+	}
+
+	$: {
+		updateModel(model);
+	}
+
+	let rules = [
+		{
+			description: 'Population growth',
+			rule: function () {
+				model.forEach((year, index) => {
+					if (index !== 0) {
+						year.populationSize.value = Number(model[index - 1].populationSize.value) + 500000;
+						year.populationSize.readOnly = true;
+					} else {
+						year.populationSize.value = year.populationSize.value;
+					}
+				});
 			}
-		]
+		},
+		{
+			description: 'Active population',
+			rule: function () {
+				model.forEach((year) => {
+					year.activePopulation.value = Math.round(year.populationSize.value * 0.66);
+					year.activePopulation.readOnly = true;
+				});
+			}
+		},
+		{
+			description: 'Warning Max tax before Revolution ',
+			rule: function () {
+				model.forEach((year) => {
+					year.incomeTaxPercent.value > 0.2
+						? (year.incomeTaxPercent.warning = 'Tax to high: might cause Revolution.')
+						: (year.incomeTaxPercent.warning = '');
+				});
+			}
+		},
+		{
+			description: 'VAT from Industry',
+			rule: function () {
+				model.forEach((year) => {
+					year.industryVAT.value = Math.round(
+						(year.activePopulation.value * year.industryVATpercent.value * 2e7) / 1e6
+					);
+					year.industryVAT.readOnly = true;
+				});
+			}
+		},
+		{
+			description: 'VAT from agriculture',
+			rule: function () {
+				model.forEach((year) => {
+					year.agricultureVAT.value = Math.round(
+						(year.activePopulation.value * year.agricultureVATpercent.value * 1e7) / 1e6
+					);
+					year.agricultureVAT.readOnly = true;
+				});
+			}
+		},
+		{
+			description: 'VAT from trade',
+			rule: function () {
+				model.forEach((year) => {
+					year.tradeVAT.value = Math.round(
+						(year.activePopulation.value * year.tradeVATpercent.value * 3e7) / 1e6
+					);
+					year.tradeVAT.readOnly = true;
+				});
+			}
+		},
+		{
+			description: 'Total income aka EGSD, utput in [kDIP]',
+			rule: function () {
+				model.forEach((year) => {
+					let incomeTaxMDIP =
+						(year.activePopulation.value *
+							year.averageIncomePerPerson.value *
+							year.incomeTaxPercent.value) /
+						1e6;
+					let propertyTaxMDIP = (year.activePopulation.value * year.propertyTax.value) / 1e6;
+					let industryVATMDIP = year.industryVAT.value;
+					let agricultureVATMDIP = year.agricultureVAT.value;
+					let tradeVATMDIP = year.tradeVAT.value;
+
+					let EGSDMDIP =
+						incomeTaxMDIP + propertyTaxMDIP + industryVATMDIP + agricultureVATMDIP + tradeVATMDIP;
+					year.totalIncome.value = Math.round(EGSDMDIP);
+					year.totalIncome.readOnly = true;
+				});
+			}
+		},
+		{
+			description: 'Budget balance in [M DIP]',
+			rule: function () {
+				model.forEach((year) => {
+					let expensesMDIP =
+						(Number(year.budgetArmy.value) +
+							Number(year.budgetPolice.value) +
+							Number(year.budgetHealthCare.value) +
+							Number(year.budgetEducation.value) +
+							Number(year.budgetJustice.value) +
+							Number(year.budgetPensions.value) +
+							Number(year.budgetInvestments.value)) /
+						1e6;
+					let balanceMDIP = year.totalIncome.value - expensesMDIP;
+
+					year.budgetBalance.value = Math.round(balanceMDIP);
+					year.budgetBalance.readOnly = true;
+				});
+			}
+		}
 	];
 
 	function addNewYear() {
-		calculations = [...calculations, deepCopy(calculationTemplate)];
+		model = [...model, deepCopy(template)];
 	}
 
-	function deepCopy(obj: any) {
-		if (typeof obj !== 'object' || obj === null) {
-			return obj;
-		}
-
-		if (obj instanceof Date) {
-			return new Date(obj.getTime());
-		}
-
-		if (obj instanceof Array) {
-			return obj.reduce((arr, item, i) => {
-				arr[i] = deepCopy(item);
-				return arr;
-			}, []);
-		}
-
-		if (obj instanceof Object) {
-			return Object.keys(obj).reduce((newObj: any, key) => {
-				newObj[key] = deepCopy(obj[key]);
-				return newObj;
-			}, {});
-		}
-	}
-
-	function calculateSum(input: []) {
-		return input.reduce((a, c) => {
-			if (typeof c.value === 'function') {
-				return Number(a) + c.value();
-			}
-			if (typeof c.value === 'string') {
-				return Number(a) + Number(c.value);
-			}
-		}, 0);
-	}
+	onMount(async () => {
+		model = [...model, deepCopy(template)];
+		model = [...model, deepCopy(template)];
+		model = [...model, deepCopy(template)];
+	});
 </script>
 
-<div class="space-y-2">
-	<button
-		class="rounded-md border-2 border-blue-100 bg-blue-50 p-4 text-blue-950 hover:border-blue-500 hover:bg-blue-300"
-		on:click={() => addNewYear()}>Add new year</button
-	>
+<button
+	class="rounded-md border-blue-100 bg-blue-50 p-4 text-blue-950 hover:border-blue-500 hover:bg-blue-300"
+	on:click={() => addNewYear()}>Add new year</button
+>
 
-	<div class="flex flex-row space-x-3">
-		{#each calculations as year, i}
-			<div class="rounded-md border-2 p-2 px-5">
-				Year {i + 1}
-				{#each year as calculation, index}
-					<div class="flex items-center py-1">
-						<div class="flex-grow">
-							{calculation.name}:
-						</div>
-						{#if calculation.type === 'calculation'}
-							<div>
-								{calculation.value()}
-							</div>
-						{:else if calculation.type === 'input'}
-							<input
-								class="w-24 rounded-md border-2 p-1 pr-2 text-right"
-								type="text"
-								bind:value={calculation.value}
-							/>
-						{/if}
-					</div>
-				{/each}
-				Sum year: {calculateSum(year)}
+<div class="flex flex-row">
+	<div class="flex shrink-0 flex-col p-3">
+		<div class="h-10 font-bold">What</div>
+		{#each Object.entries(template) as field}
+			<div class="flex h-12 items-center">
+				{field[1].label}
 			</div>
 		{/each}
 	</div>
+
+	{#each model as year, indexYear}
+		<div class="flex flex-col p-3">
+			<div class="h-10 pr-3 text-right font-bold">
+				Year {indexYear + 1}
+			</div>
+
+			<div class="flex flex-row">
+				<div>
+					{#each Object.keys(year) as field, indexField}
+						<div class="flex h-12 items-center">
+							<!-- class:pointer-events-none={year[field].readOnly} -->
+							{#if year[field].readOnly}
+								<span type="text" class="w-36 p-2 text-right">{year[field].value}</span>
+							{:else}
+								<input
+									type="text"
+									class="w-36 rounded-md border-2 p-2 text-right"
+									class:border-red-500={year[field].warning}
+									bind:value={year[field].value}
+								/>
+							{/if}
+						</div>
+						<div class="w-36 text-xs text-red-700">
+							{year[field].warning ? year[field].warning : ''}
+						</div>
+					{/each}
+				</div>
+			</div>
+		</div>
+	{/each}
 </div>
