@@ -51,33 +51,34 @@
 			label: 'EGSD [M DIP]',
 			value: 0
 		},
+
 		budgetArmy: {
-			label: 'Army budget [DIP]',
-			value: 990000000000
+			label: 'Army budget [M DIP]',
+			value: 2414760
 		},
 		budgetPolice: {
-			label: 'Police budget [DIP]',
-			value: 990000000000
+			label: 'Police budget [M DIP]',
+			value: 1514760
 		},
 		budgetHealthCare: {
-			label: 'Health Care budget [DIP]',
-			value: 1500000
+			label: 'Health Care budget [M DIP]',
+			value: 14760
 		},
 		budgetEducation: {
-			label: 'Education budget [DIP]',
-			value: 5000000
+			label: 'Education budget [M DIP]',
+			value: 3460
 		},
 		budgetJustice: {
-			label: 'Justice budget [DIP]',
-			value: 990000000000
+			label: 'Justice budget [M DIP]',
+			value: 1518760
 		},
 		budgetPensions: {
-			label: 'Pension budget [DIP]',
-			value: 13300000
+			label: 'Pension budget [M DIP]',
+			value: 14330
 		},
 		budgetInvestments: {
-			label: 'Investment budget [DIP]',
-			value: 2600000000
+			label: 'Investment budget [M DIP]',
+			value: 914760
 		},
 		budgetBalance: {
 			label: 'Blance [M DIP]',
@@ -189,14 +190,13 @@
 			rule: function () {
 				model.forEach((year: any) => {
 					let expensesMDIP =
-						(Number(year.budgetArmy.value) +
-							Number(year.budgetPolice.value) +
-							Number(year.budgetHealthCare.value) +
-							Number(year.budgetEducation.value) +
-							Number(year.budgetJustice.value) +
-							Number(year.budgetPensions.value) +
-							Number(year.budgetInvestments.value)) /
-						1e6;
+						Number(year.budgetArmy.value) +
+						Number(year.budgetPolice.value) +
+						Number(year.budgetHealthCare.value) +
+						Number(year.budgetEducation.value) +
+						Number(year.budgetJustice.value) +
+						Number(year.budgetPensions.value) +
+						Number(year.budgetInvestments.value);
 					let balanceMDIP = year.totalIncome.value - expensesMDIP;
 
 					year.budgetBalance.value = Math.round(balanceMDIP);
