@@ -2,7 +2,7 @@
 	import { deepCopy } from '$lib/tools';
 	import { onMount } from 'svelte';
 
-	let template:any = {
+	let template: any = {
 		populationSize: {
 			label: 'Population size',
 			value: 1000000
@@ -87,7 +87,7 @@
 
 	let model: any = [];
 
-	function updateModel(model:any) {
+	function updateModel(model: any) {
 		rules.forEach((rule) => {
 			rule.rule();
 		});
@@ -101,7 +101,7 @@
 		{
 			description: 'Population growth',
 			rule: function () {
-				model.forEach((year:any, index:number) => {
+				model.forEach((year: any, index: number) => {
 					if (index !== 0) {
 						year.populationSize.value = Number(model[index - 1].populationSize.value) + 500000;
 						year.populationSize.readOnly = true;
@@ -114,7 +114,7 @@
 		{
 			description: 'Active population',
 			rule: function () {
-				model.forEach((year:any) => {
+				model.forEach((year: any) => {
 					year.activePopulation.value = Math.round(year.populationSize.value * 0.66);
 					year.activePopulation.readOnly = true;
 				});
@@ -123,7 +123,7 @@
 		{
 			description: 'Warning Max tax before Revolution ',
 			rule: function () {
-				model.forEach((year:any) => {
+				model.forEach((year: any) => {
 					year.incomeTaxPercent.value > 0.2
 						? (year.incomeTaxPercent.warning = 'Tax to high: might cause Revolution.')
 						: (year.incomeTaxPercent.warning = '');
@@ -133,7 +133,7 @@
 		{
 			description: 'VAT from Industry',
 			rule: function () {
-				model.forEach((year:any) => {
+				model.forEach((year: any) => {
 					year.industryVAT.value = Math.round(
 						(year.activePopulation.value * year.industryVATpercent.value * 2e7) / 1e6
 					);
@@ -144,7 +144,7 @@
 		{
 			description: 'VAT from agriculture',
 			rule: function () {
-				model.forEach((year:any) => {
+				model.forEach((year: any) => {
 					year.agricultureVAT.value = Math.round(
 						(year.activePopulation.value * year.agricultureVATpercent.value * 1e7) / 1e6
 					);
@@ -155,7 +155,7 @@
 		{
 			description: 'VAT from trade',
 			rule: function () {
-				model.forEach((year:any) => {
+				model.forEach((year: any) => {
 					year.tradeVAT.value = Math.round(
 						(year.activePopulation.value * year.tradeVATpercent.value * 3e7) / 1e6
 					);
@@ -166,7 +166,7 @@
 		{
 			description: 'Total income aka EGSD, utput in [kDIP]',
 			rule: function () {
-				model.forEach((year:any) => {
+				model.forEach((year: any) => {
 					let incomeTaxMDIP =
 						(year.activePopulation.value *
 							year.averageIncomePerPerson.value *
@@ -187,7 +187,7 @@
 		{
 			description: 'Budget balance in [M DIP]',
 			rule: function () {
-				model.forEach((year:any) => {
+				model.forEach((year: any) => {
 					let expensesMDIP =
 						(Number(year.budgetArmy.value) +
 							Number(year.budgetPolice.value) +
@@ -213,14 +213,8 @@
 	onMount(async () => {
 		model = [...model, deepCopy(template)];
 		model = [...model, deepCopy(template)];
-		model = [...model, deepCopy(template)];
 	});
 </script>
-
-<button
-	class="rounded-md border-blue-100 bg-blue-50 p-4 text-blue-950 hover:border-blue-500 hover:bg-blue-300"
-	on:click={() => addNewYear()}>Add new year</button
->
 
 <div class="flex flex-row">
 	<div class="flex shrink-0 flex-col p-3">
@@ -261,4 +255,10 @@
 			</div>
 		</div>
 	{/each}
+	<div class="h-12 shrink-0">
+		<button
+			class="rounded-md border-2 border-blue-300 bg-blue-50 p-4 hover:border-blue-800 hover:bg-blue-200"
+			on:click={() => addNewYear()}>Add new year</button
+		>
+	</div>
 </div>
