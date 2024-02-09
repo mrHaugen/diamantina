@@ -2,6 +2,9 @@
 	import '../app.pcss';
 	import diamantia_logo from '$lib/images/diamantia_logo.png';
 </script>
+<svelte:head>
+	<script defer data-domain="diamantina.vercel.app" src="https://plausible.io/js/script.js"></script>
+</svelte:head>
 
 <div>
 	<!-- Off-canvas menu for mobile, show/hide based on off-canvas menu state. -->
